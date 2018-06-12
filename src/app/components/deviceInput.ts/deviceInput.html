@@ -1,0 +1,97 @@
+<form #deviceEntryForm="ngForm" (ngSubmit)="onSubmit(deviceEntryForm)">
+    <div class="form-row" style="margin-bottom: 20px">
+        <div class="col-sm form-group">
+            <label for="hostsName">Hostname:</label>
+            <input class="form-control" placeholder="Enter Hostname" name="hostName" id="hostName" [(ngModel)]="deviceInput.hostName"
+                required #hostName="ngModel" pattern="^[a-z][a-z0-9+\-.]*://([a-z0-9\-._~%!$&'()*+,;=]+@)?([a-z0-9\-._~%]+|↵
+             \[[a-z0-9\-._~%!$&'()*+,;=:]+\])">
+            <div *ngIf="hostName.invalid && (hostName.dirty || hostName.touched)" class="alert alert-danger">
+
+                <div *ngIf="hostName.errors.required">
+                    Hostname is required.
+                </div>
+                <div *ngIf="hostName.errors.pattern">
+                    Correct the url format.
+                </div>
+            </div>
+        </div>
+
+        <div class="col-sm form-group mp-2">
+            <label for="loopback">Loopback:</label>
+            <input class="form-control" placeholder="Enter Loopback" name="loopback" id="loopback" [(ngModel)]="deviceInput.loopback0_ipv4"
+                required #loopback="ngModel" pattern='^((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$'>
+            <div *ngIf="loopback.invalid && (loopback.dirty || loopback.touched)" class="alert alert-danger">
+
+                <div *ngIf="loopback.errors.required">
+                    Loopback is required.
+                </div>
+                <div *ngIf="loopback.errors.pattern">
+                    Loopback is 0.0.0.0
+                </div>
+
+            </div>
+        </div>
+        <div class="col-sm form-group col-auto ">
+            <br />
+            <button type="submit" class="btn btn-primary" [disabled]="!deviceEntryForm.form.valid" [innerText]="buttonLabel" style="margin-top:6px" ></button>
+            <button  class="btn btn-primary"  style="margin-top:6px" (click)="clearItem();">Clear</button>
+        </div>
+    </div>
+</form>
+
+<div class="row">
+    <div class="col-sm">
+        <div class="btn-group">
+            <button class="btn btn-sm" (click)="changPage('pervious')"  [disabled]="isdisablePre">
+                <i class="fa fa-arrow-circle-left" aria-hidden="true"></i>
+            </button>
+            <input class="form-control" [ngModel]="pageSize" (ngModelChange)="valueChanged($event)">
+            <select class="form-control" (change)="pageChanged($event)" [(ngModel)]="selPage">
+                <ng-container *ngFor="let item of pagesNum">
+                    <option [ngValue]="item">{{item}}</option>
+                </ng-container>
+            </select>
+            <button class="btn btn-sm" (click)="changPage('next')" [disabled]="isdisbleNext">
+                <i class="fa fa-arrow-circle-right" aria-hidden="true"></i>
+            </button>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-sm">
+        <strong> SR NO</strong>
+    </div>
+    <div class="col-sm">
+        <strong>HostName</strong>
+    </div>
+    <div class="col-sm">
+        <strong>Loopback</strong>
+    </div>
+    <div class="col-sm">
+        <strong>Action</strong>
+    </div>
+</div>
+<ng-container *ngFor="let item of deviceInputs">
+    <div class="row top-buffer">
+        <div class="col-sm">
+            {{item.rowNumber}}
+        </div>
+        <div class="col-sm">
+            {{item.hostName}}
+        </div>
+        <div class="col-sm">
+            {{item.loopback0_ipv4}}
+        </div>
+        <div class="col-sm">
+
+            <button class="btn btn-primary btn-sm mt-1" (click)="deleteDeviceInput(item);">
+                <span class="fa fa-trash" aria-hidden="true"></span>
+            </button>
+            <button class="btn btn-primary btn-sm mt-1" (click)="editAnItem(item);">
+                <i class="fa fa-pencil" aria-hidden="true"></i>
+            </button>
+            <interfaceInput-selector [deviceInput]="item"></interfaceInput-selector>
+        </div>
+    </div>
+
+</ng-container>

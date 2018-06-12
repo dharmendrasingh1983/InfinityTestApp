@@ -1,0 +1,117 @@
+<ng-template #content let-c="close" let-d="dismiss" class="modal-lg">
+
+    <div class="modal-header">
+        <h4 class="modal-title">Edit Interface</h4>
+        <button type="button" class="close" aria-label="Close" (click)="d('somethig');">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <div class="container-fluid">
+            <form #interfaceForm="ngForm" (ngSubmit)="onSubmit(interfaceForm)">
+                <div class="row">
+
+                    <div class="col-sm">
+                        <div class="form-group">
+                            <label for="interface">Interface:</label>
+                            <input class="form-control" appInputValidateor uniqInputValidate TableAndField="InterfaceInput:interface" placeholder="Enter interface"
+                                name="interface" id="interface" [(ngModel)]="interfaceInput.interface" required #interface="ngModel">
+                            <div *ngIf="interface.invalid && (interface.dirty || interface.touched) " class="alert alert-danger">
+
+                                <div *ngIf="interface.errors.required">
+                                    Interface is required.
+                                </div>
+                                <div *ngIf="interface.errors?.notMatch">
+                                    Correct the format should be like Loopback100.
+                                </div>
+                                <div *ngIf="interface.errors?.uniqueVialation">
+                                    The Interfac should be unique.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm">
+                        <div class="form-group">
+                            <label for="ip">IP:</label>
+                            <span class="form-control">{{interfaceInput.loopback0_ipv4}}</span>
+                        </div>
+                    </div>
+                    <div class="col-sm">
+                        <br/>
+                        <button type="submit" class="btn btn-sm btn-primary" [innerText]="buttonLabel" [disabled]="interfaceForm.form.invalid" style="margin-top:10px"></button>
+                        <button  class="btn btn-primary btn-sm"  style="margin-top:10px" (click)="clearItem();">Clear</button>
+                    </div>
+
+                </div>
+
+            </form>
+            <div class="row">
+                <div class="col-sm">
+                    <div class="btn-group">
+                        <button class="btn btn-sm" (click)="changPage('pervious')" [disabled]="isdisablePre" >
+                            <i class="fa fa-arrow-circle-left" aria-hidden="true"></i>
+                        </button>
+                        <input class="form-control" [ngModel]="pageSize" (ngModelChange)="valueChanged($event)">
+                        <select class="form-control" (change)="pageChanged($event)" [(ngModel)]="selPage">
+                            <ng-container *ngFor="let item of pagesNum">
+                                <option [ngValue]="item">{{item}}</option>
+                            </ng-container>
+                        </select>
+                        <button class="btn btn-sm" (click)="changPage('next')" [disabled]="isdisbleNext">
+                            <i class="fa fa-arrow-circle-right" aria-hidden="true"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-sm">
+                    <strong> SR NO</strong>
+                </div>
+                <div class="col-sm">
+                    <strong>INTERFACE</strong>
+                </div>
+                <div class="col-sm">
+                    <strong>IP</strong>
+                </div>
+                <div class="col-sm">
+                    <strong>ACTION</strong>
+                </div>
+            </div>
+            <ng-container *ngFor="let item of interfacesInputs">
+                <div class="row top-buffer">
+                    <div class="col-sm">
+                        {{item.rowNumber}}
+                    </div>
+                    <div class="col-sm">
+                        {{item.interface}}
+                    </div>
+                    <div class="col-sm">
+                        {{item.loopback0_ipv4}}
+                    </div>
+                    <div class="col-sm">
+                        <button class="btn btn-primary btn-sm mt-1" (click)="deleteDeviceInput(item);">
+                            <i class="fa fa-trash" aria-hidden="true"></i>
+                        </button>
+                        <button class="btn btn-primary btn-sm mt-1" (click)="editAnItem(item);">
+                            <i class="fa fa-pencil" aria-hidden="true"></i>
+                        </button>
+                       
+                    </div>
+                </div>
+
+            </ng-container>
+        </div>
+    </div>
+
+
+
+    <div class="modal-footer">
+        <button type="button" class="btn btn-outline-dark" (click)="c('something');">Close</button>
+    </div>
+
+</ng-template>
+
+<button class="btn btn-sm btn-primary mt-1" (click)="openDialog(content)">
+    <i class="fa fa-eye" aria-hidden="true"></i>
+</button>
